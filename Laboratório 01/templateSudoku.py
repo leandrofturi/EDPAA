@@ -81,6 +81,34 @@ def resolveSudoku(grid, dimSudoku):
     
     return False
 
+
+def resolveSudoku_iterativo(grid, dimSudoku):
+    pos = encontraPosicaoValida(grid, dimSudoku, dimSudoku)
+    if pos is False:
+        return True
+
+    # (row, col, proximo_candidato)
+    stack = [(pos[0], pos[1], 1)]
+    while stack:
+        row, col, start_num = stack[-1]
+        colocado = False
+        for num in range(start_num, dimSudoku + 1):
+            if verificaCandidatoPosicaoValida(grid, num, row, col, dimSudoku):
+                grid[row][col] = num
+                stack[-1] = (row, col, num + 1)
+                prox_pos = encontraPosicaoValida(grid, dimSudoku, dimSudoku)
+                if prox_pos is False:
+                    return True
+                stack.append((prox_pos[0], prox_pos[1], 1))
+                colocado = True
+                break
+
+        if not colocado:  # backtrack
+            grid[row][col] = 0
+            stack.pop()
+
+    return False
+
 def main():
     dimSudoku = 9
 
