@@ -84,3 +84,37 @@ while True:
    NF.print()
    # espera um tempo
    entrada = input("")
+
+
+from FilaDupla import FilaDupla
+f = FilaDupla(3)
+# enfila 1, 3 e 5 nesta ordem
+f.enqueue_end(1)
+f.enqueue_end(3)
+f.enqueue_end(5)
+f.print()
+f.enqueue_front(5)
+f.print()
+f.enqueue_front(5)
+f.enqueue_front(5)
+f.print()
+# mostra início e fim da fila
+print("inicio:", f.first(), "fim:", f.last())
+# remove e mostra os dois primeiros 1 e 3
+print("desenfila:", f.dequeue_front())
+print("desenfila:", f.dequeue_front())
+print("desenfila:", f.dequeue_end())
+# mostra início e fim da fila
+print("inicio:", f.first(), "fim:", f.last())
+
+
+
+from ProdutorConsumidor import Sincronizador
+
+buffer = Sincronizador(capacidade=3)
+
+produtores = [Produtor(buffer, 5), Produtor(buffer, 4)]
+consumidores = [Consumidor(buffer, 3), Consumidor(buffer, 2)]
+
+for t in produtores + consumidores:
+    t.start()
