@@ -63,29 +63,43 @@ class OutraListaEncadeadaSimples:
         p = self
         k = 1
         print("Imprimindo a lista encadeada:")
-        while p is not None:
+        while p._info is not None:
             print(k, " - ", p._info)
             k = k + 1
             p = p._prox
 
-    def ImprimeLE_Recursao(self):
-        pass
+    def ImprimeLE_Recursao(self, p=None, k=1):
+        if p is None:
+            p = self
+        if p._info is None:
+            return
+        print(k, " - ", p._info)
+        self.ImprimeLE_Recursao(p._prox, k+1)
 
-    def Conta_Recursao(x):
+    def Conta_Recursao(self, x, p=None):
         # Função Conta(x) que devolve a quantidade de nós 
         # com info = x.
-        pass
+        if p is None:
+            p = self
+        if p._info is None:
+            return 0
+        return (p._info == x) + self.Conta_Recursao(x, p._prox)
 
 # Testes
 # Cria lista encadeada
-cores = ["vermelho", "preto", "azul", "amarelo", "verde", "branco"]
+cores = ["vermelho", "preto", "azul", "amarelo", "verde", "branco", "vermelho"]
 LEC = OutraListaEncadeadaSimples()
 for cor in cores:
     LEC = LEC.adicionaLE(cor)
 LEC.ImprimeLE()
+print("")
+LEC.ImprimeLE_Recursao()
 
+print("")
+print("")
 # Procura alguns elementos
 outrascores = ["laranja", "violeta", "lilas"]
 for cor in cores + outrascores:
     if LEC.busca(cor) != None: print(cor, "está na LE")
     else: print(cor, "não está na LE")
+print("Qtd vermelho: ", LEC.Conta_Recursao("vermelho"))
