@@ -24,29 +24,48 @@ class FilaListaEncadeada:
         
     def __len__(self):
         # retorna o tamanho da fila
-        pass
+        return self._tamanho
 
     def is_empty(self):
         # retorna True se fila vazia
-        pass
+        return self.__len__() == 0
     
 
     def first(self):
         # retorna sem remover o inicio da fila.
         # sinaliza exceção se fila vazia
-        pass
+        if self.is_empty():
+            raise Empty("Lista encadeada Vazia")
+        return self._inicio._info
 
     def enqueue(self, e):
         # adiciona elemento ao final da fila
-        pass   
-                    
+        novo = self._Node(e, None)
+        if self.is_empty():
+            self._inicio = self._final = novo
+        else:
+            self._final._prox = novo
+            self._final = novo
+        self._tamanho += 1
+
     def dequeue(self):
         # remove e retorna o elmento do inicio da fila
         # sinaliza exceção se fila vazia
-        pass
+        if self.is_empty():
+            raise Empty("Lista encadeada Vazia")
+        e = self._inicio
+        self._inicio = e._prox
+        self._tamanho -= 1
+        if self.is_empty():
+            self._inicio = self._final = None
+        return e._info
 
     def ImprimeFila(self):
-        pass
+        p = self._inicio
+        while p is not None:
+            print(p._info, end=" ")
+            p = p._prox
+        print()
 
 ''' 
 Testes
@@ -55,7 +74,7 @@ Testes
 F = FilaListaEncadeada()
 # adiciona 10 elementos
 for k in range(10): F.enqueue(k)
-F.ImprimeLE()
+F.ImprimeFila()
 # remove 6 elementos
 for k in range(6): F.dequeue()
 F.ImprimeFila()

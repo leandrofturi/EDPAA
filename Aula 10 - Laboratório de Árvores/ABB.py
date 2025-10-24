@@ -1,3 +1,6 @@
+from filaListaEncadeada import FilaListaEncadeada
+from pilhaListaEncadeada import PilhaListaEncadeada
+
 class ABB:
     
     def __init__ (self, raiz):
@@ -62,6 +65,65 @@ def ImprimeABBpostOrder(h):
 def ImprimeABBinLevel(h):
     pass
 
+def ImprimeABBinOrderTAD(h):
+    if h is None:
+        return
+    s = PilhaListaEncadeada()
+    node = h
+    while (not s.is_empty()) or (node is not None):
+        if node is not None:
+            s.push(node)
+            node = node._eprox
+        else:
+            node = s.pop()
+            print(node._info, end=" ")
+            node = node._dprox
+
+def ImprimeABBpreOrderTAD(h):
+    if h is None:
+        return
+    s = PilhaListaEncadeada()
+    s.push(h)
+    while not s.is_empty():
+        node = s.pop()
+        if node._dprox is not None:
+            s.push(node._dprox)
+        if node._eprox is not None:
+            s.push(node._eprox)
+        print(node._info, end=" ")
+
+def ImprimeABBpostOrderTAD(h):
+    if h is None:
+        return
+    s = PilhaListaEncadeada()
+    node = h
+    last_node = None
+    while (not s.is_empty()) or (node is not None):
+        if node is not None:
+            s.push(node)
+            node = node._eprox
+        else:
+            e = s.top()
+            if (e._dprox is not None) and (last_node != e._dprox):
+                node = e._dprox
+            else:
+                print(e._info, end=" ")
+                last_node = s.pop()
+
+def ImprimeABBinLevelTAD(h):
+    if h is None:
+        return
+    q = FilaListaEncadeada()
+    q.enqueue(h)
+    while not q.is_empty():
+        node = q.dequeue()
+        if node._eprox is not None:
+            q.enqueue(node._eprox)
+        if node._dprox is not None:
+            q.enqueue(node._dprox)
+        print(node._info, end=" ")
+    
+
 def insereElementoABB(h, elemento):
     if h is None:
         return ABB(elemento)
@@ -105,10 +167,10 @@ def montaABB(a, a_len):
     return abb
 
 
-def montaABBIterativo(a, a_len):
+def montaABBIter(a, a_len):
     abb = None
     for k in range(a_len):
-        abb = insereElementoABBIterativo(abb, a[k])
+        abb = insereElementoABBIter(abb, a[k])
     return abb
 
 
@@ -130,10 +192,10 @@ print("recursivo")
 printABB_bonito(mabb)
 printABB_bonito(moabb)
 
-_mabb = montaABBIterativo(lista, len(lista))
-_moabb = montaABBIterativo(outralista, len(outralista))
+_mabb = montaABBIter(lista, len(lista))
+_moabb = montaABBIter(outralista, len(outralista))
 
-print("iterativo")
+print("Iter")
 printABB_bonito(_mabb)
 printABB_bonito(_moabb)
 print()
