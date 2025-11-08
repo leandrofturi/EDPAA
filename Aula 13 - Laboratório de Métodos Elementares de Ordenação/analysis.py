@@ -1,6 +1,4 @@
-import os, sys
-
-
+import os
 import sys
 import time
 
@@ -22,10 +20,10 @@ def sortting(input_data, sort_func):
     print(f"sort '{name}' in {end - start:.4f}s")
 
     # printing sorted arrays
-    with open(sys.argv[1] + "_sorted_{name}", 'w') as file:
+    with open(sys.argv[1] + f"_sorted_{name}", 'w') as file:
         for x in sorted_data:
             file.write(str(x) + " ")
-    
+
     if len(input_data) < 10:
         for x in sorted_data:
             print(str(x) + " ")
@@ -36,7 +34,7 @@ def run(path):
 
     # example of time counting for reading the input data
 
-    #start the timer
+    # start the timer
     start = time.time()
     input_data = []
     with open(path, 'r') as file:
@@ -59,8 +57,12 @@ def run(path):
 
 
 def main():
-    for path in [os.path.join(dp, f) for dp, dn, filenames in os.walk(sys.argv[1]) for f in filenames if os.path.splitext(f)[1] == '.txt']:
+    paths = [os.path.join(dp, f) for dp, dn, filenames in
+             os.walk(sys.argv[1]) for f in filenames
+             if os.path.splitext(f)[1] == '.txt']
+    for path in paths:
         print(path)
         run(path)
+
 
 main()

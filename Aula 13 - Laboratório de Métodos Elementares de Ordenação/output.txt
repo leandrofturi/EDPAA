@@ -1,0 +1,116 @@
+python3 analysis.py input/
+input/less.txt
+size=6
+read in 0.0000s
+sort 'insertion_sort' in 0.0000s
+1 
+2 
+3 
+4 
+5 
+6 
+sort 'selection_sort' in 0.0000s
+1 
+2 
+3 
+4 
+5 
+6 
+sort 'bubble_sort' in 0.0000s
+1 
+2 
+3 
+4 
+5 
+6 
+sort 'shaker_sort' in 0.0000s
+1 
+2 
+3 
+4 
+5 
+6 
+input/in/reverse_sorted/10Kreverse_sorted.txt
+size=10000
+read in 0.0016s
+sort 'insertion_sort' in 11.1284s
+sort 'selection_sort' in 3.4720s
+sort 'bubble_sort' in 4.3189s
+sort 'shaker_sort' in 4.4035s
+input/in/reverse_sorted/100Kreverse_sorted.txt
+size=100000
+read in 0.0182s
+sort 'insertion_sort' in 1100.8575s
+sort 'selection_sort' in 323.6783s
+sort 'bubble_sort' in 390.3825s
+sort 'shaker_sort' in 405.7715s
+input/in/reverse_sorted/1Kreverse_sorted.txt
+size=1000
+read in 0.0002s
+sort 'insertion_sort' in 0.0990s
+sort 'selection_sort' in 0.0323s
+sort 'bubble_sort' in 0.0355s
+sort 'shaker_sort' in 0.0396s
+input/in/unif_rand/10Kunif_rand.txt
+size=10000
+read in 0.0017s
+sort 'insertion_sort' in 5.1731s
+sort 'selection_sort' in 3.2604s
+sort 'bubble_sort' in 3.8497s
+sort 'shaker_sort' in 3.9847s
+input/in/unif_rand/1Kunif_rand.txt
+size=1000
+read in 0.0002s
+sort 'insertion_sort' in 0.0534s
+sort 'selection_sort' in 0.0321s
+sort 'bubble_sort' in 0.0353s
+sort 'shaker_sort' in 0.0388s
+input/in/unif_rand/100Kunif_rand.txt
+size=100000
+read in 0.0173s
+sort 'insertion_sort' in 518.7976s
+sort 'selection_sort' in 352.5428s
+sort 'bubble_sort' in 411.9387s
+sort 'shaker_sort' in 414.8039s
+input/in/sorted/100Ksorted.txt
+size=100000
+read in 0.0160s
+sort 'insertion_sort' in 0.0186s
+sort 'selection_sort' in 318.1716s
+sort 'bubble_sort' in 388.3072s
+sort 'shaker_sort' in 403.1383s
+input/in/sorted/1Ksorted.txt
+size=1000
+read in 0.0002s
+sort 'insertion_sort' in 0.0002s
+sort 'selection_sort' in 0.0360s
+sort 'bubble_sort' in 0.0330s
+sort 'shaker_sort' in 0.0385s
+input/in/sorted/10Ksorted.txt
+size=10000
+read in 0.0018s
+sort 'insertion_sort' in 0.0021s
+sort 'selection_sort' in 3.2685s
+sort 'bubble_sort' in 3.8624s
+sort 'shaker_sort' in 3.9914s
+input/in/nearly_sorted/10Knearly_sorted.txt
+size=10000
+read in 0.0020s
+sort 'insertion_sort' in 0.0027s
+sort 'selection_sort' in 3.3035s
+sort 'bubble_sort' in 3.8742s
+sort 'shaker_sort' in 4.0004s
+input/in/nearly_sorted/100Knearly_sorted.txt
+size=100000
+read in 0.0166s
+sort 'insertion_sort' in 0.0237s
+sort 'selection_sort' in 321.8254s
+sort 'bubble_sort' in 386.7074s
+sort 'shaker_sort' in 390.2627s
+input/in/nearly_sorted/1Knearly_sorted.txt
+size=1000
+read in 0.0002s
+sort 'insertion_sort' in 0.0002s
+sort 'selection_sort' in 0.0324s
+sort 'bubble_sort' in 0.0355s
+sort 'shaker_sort' in 0.0390s
