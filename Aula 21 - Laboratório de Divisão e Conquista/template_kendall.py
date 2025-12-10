@@ -40,10 +40,12 @@ def kendall_tau(A, B):
         pos[x] = idx
 
     C = [-1] * len(A)
+    aux = [-1] * len(A)
     for idx, x in enumerate(A):
         C[idx] = pos[A[idx]]
+        aux[idx] = pos[A[idx]]
 
-    print(C)
+    return mergesort_conta_inv(C, aux, 0, len(C) - 1)
 
 
 # EXEMPLO DE USO
@@ -51,6 +53,18 @@ A = [2, 0, 1, 3]
 B = [0, 1, 2, 3]
 print("Kendall τ:", kendall_tau(A, B))
 
-'''
-Análise do comportamento pela relação de recorrência:
-'''
+
+# Source - https://stackoverflow.com/a
+# Posted by mikebob
+# Retrieved 2025-12-09, License - CC BY-SA 4.0
+
+from scipy.stats import kendalltau
+
+def kendall_distance_count(a, b):
+    tau, p_value = kendalltau(a, b)
+    n = len(a)
+    N = n * (n - 1) / 2
+    D = (1 - tau) * N / 2
+    return round(D)
+
+print("Kendall τ:", kendall_distance_count(A, B))
