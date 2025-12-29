@@ -1,7 +1,8 @@
 # RELATÓRIO
 Trabalho Prático T1 \
 EDPAA 2025/2 \
-Leandro Furlam Turi
+Leandro Furlam Turi \
+Repositório: https://github.com/leandrofturi/EDPAA.git
 
 ## 1. Introdução
 
