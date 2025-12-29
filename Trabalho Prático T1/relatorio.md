@@ -91,7 +91,7 @@ SHORTEST PATH TO node_2: node_2 <- node_3 <- node_0 (Distance: 8.00)
 SHORTEST PATH TO node_4: node_4 <- node_2 <- node_3 <- node_0 (Distance: 12.00)
 ```
 
-[<img src="output/grafo1.PNG" width="300"/>](output/grafo1.PNG)
+[<img src="output/grafo1.PNG" width="500"/>](output/grafo1.PNG)
 
 #### 4.1.2. Teste 2
  ```
@@ -120,7 +120,7 @@ SHORTEST PATH TO node_3: node_3 <- node_2 <- node_1 <- node_0 (Distance: 19.00)
 SHORTEST PATH TO node_4: node_4 <- node_5 <- node_6 <- node_7 <- node_0 (Distance: 21.00)
 ```
 
-[<img src="output/grafo2.PNG" width="300"/>](output/grafo2.PNG)
+[<img src="output/grafo2.PNG" width="500"/>](output/grafo2.PNG)
 
 
 ### 4.2. Desempenho
