@@ -167,7 +167,7 @@ Isso reduz o número de comparações, mantém a heap limpa e melhora o desempen
 
 ## 6. Resultados
 
-Foram realizadas três execuções (com resultados verificados) e calculada a média dos tempos de execução, com o script `analysis.py`.
+Foram realizadas três execuções (com resultados verificados) e calculada a média dos tempos de execução, com o script `analysis.py`. Os testes foram realizados em uma máquina virtual Debian GNU/Linux 10 (buster) com ~30 GB de RAM.
 
 ### 6.1. Casos de Teste Muito Pequenos
 
