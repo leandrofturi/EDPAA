@@ -15,7 +15,7 @@ class DiskManager:
         self.node_size = struct.calcsize(self.fmt)
 
         with open(self.path, "wb"):
-            pass
+            pass  # limpar arquivo
         self._f = open(self.path, "r+b", buffering=0)
         self.next_index = 0
 
@@ -50,6 +50,19 @@ class DiskManager:
         )
         self._f.seek(idx * self.node_size)
         self._f.write(packed)
+
+    def dump_txt(self, path: str) -> None:
+        with open(path, "w", encoding="utf-8") as out:
+            out.write(f"d={self.d}\n")
+            out.write(f"nodes={self.next_index}\n")
+            for idx in range(self.next_index):
+                node = self.read_node(idx)
+                out.write(f"\nnode {idx}\n")
+                out.write(f"is_leaf={int(node.is_leaf)}\n")
+                out.write(f"n_keys={node.n_keys}\n")
+                out.write("keys=" + " ".join(str(k) for k in node.keys) + "\n")
+                out.write("values=" + " ".join(str(v) for v in node.values) + "\n")
+                out.write("children=" + " ".join(str(c) for c in node.children) + "\n")
 
     def close_and_delete(self) -> None:
         try:

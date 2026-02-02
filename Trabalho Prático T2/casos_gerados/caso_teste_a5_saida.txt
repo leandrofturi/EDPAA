@@ -1,0 +1,3 @@
+O REGISTRO ESTA NA ARVORE!
+-- ARVORE B
+[key: 40, ]

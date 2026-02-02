@@ -1,5 +1,6 @@
+import os
 import sys
-from typing import List, Tuple
+from typing import List
 from BTree import BTree
 from diskManager import DiskManager
 
@@ -16,6 +17,9 @@ def run_case(input_path: str, output_path: str) -> None:
     bt = BTree(d=d, disk=disk)
 
     out_lines: List[str] = []
+    dump_dir = os.path.join(os.getcwd(), "btree_dumps")
+    os.makedirs(dump_dir, exist_ok=True)
+    step = 0
     try:
         for op in ops:
             kind = op[0]
@@ -34,6 +38,10 @@ def run_case(input_path: str, output_path: str) -> None:
                 )
             else:
                 out_lines.append(f"OPERACAO INVALIDA: {op}")
+
+            step += 1
+            dump_path = os.path.join(dump_dir, f"passo_{step:03d}.txt")
+            disk.dump_txt(dump_path)
 
         out_lines.append("-- ARVORE B")
         out_lines.extend(bt.to_level_order_lines())

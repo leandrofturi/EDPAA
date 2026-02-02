@@ -1,0 +1,30 @@
+d=4
+nodes=4
+
+node 0
+is_leaf=1
+n_keys=3
+keys=6 10 15
+values=6 10 15
+children=-1 -1 -1 -1
+
+node 1
+is_leaf=1
+n_keys=1
+keys=70 0 0
+values=70 0 0
+children=-1 -1 -1 -1
+
+node 2
+is_leaf=0
+n_keys=2
+keys=17 50 0
+values=17 50 0
+children=0 3 1 -1
+
+node 3
+is_leaf=1
+n_keys=2
+keys=18 20 0
+values=18 20 0
+children=-1 -1 -1 -1

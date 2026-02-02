@@ -6,14 +6,21 @@ from diskManager import DiskManager
 
 class BTree:
     def __init__(self, d: int, disk: DiskManager):
-        if d < 2:
-            raise ValueError("Ordem d deve ser >= 2.")
         self.d = d
         self.disk = disk
-        self.max_keys = d - 1
-        self.min_keys = math.ceil(d / 2) - 1
+        self.max_keys = self.d - 1
+        if self.d == 2:
+            # Regra especial da especificação: não permitir árvore vazia.
+            self.min_keys = 1
+        else:
+            self.min_keys = math.ceil(self.d / 2) - 1
 
         self.root = self.disk.alloc_node(is_leaf=True)
+
+    def _min_keys_for(self, idx: int) -> int:
+        if idx == self.root:
+            return 1
+        return self.min_keys
 
     def search(self, key: int) -> bool:
         return self._search(self.root, key)
@@ -45,7 +52,9 @@ class BTree:
             self.disk.write_node(new_root, r)
             self.root = new_root
 
-    def _insert_rec(self, idx: int, key: int, value: int) -> Optional[Tuple[int, int, int]]:
+    def _insert_rec(
+        self, idx: int, key: int, value: int
+    ) -> Optional[Tuple[int, int, int]]:
         node = self.disk.read_node(idx)
 
         # update se já existe aqui
@@ -95,7 +104,10 @@ class BTree:
             return None
         return self._split_overflow(idx, node, keys, vals, children)
 
-    def _write_from_lists(self, idx: int, node: BTreeNode, keys: List[int], vals: List[int], children: List[int]) -> None:
+    def _write_from_lists(
+        self, idx: int, node: BTreeNode, keys: List[int], vals: List[int],
+        children: List[int]
+    ) -> None:
         node.n_keys = len(keys)
         for j in range(self.max_keys):
             if j < node.n_keys:
@@ -108,7 +120,10 @@ class BTree:
             node.children[j] = children[j] if j < len(children) else -1
         self.disk.write_node(idx, node)
 
-    def _split_overflow(self, idx: int, node: BTreeNode, keys: List[int], vals: List[int], children: List[int]) -> Tuple[int, int, int]:
+    def _split_overflow(
+        self, idx: int, node: BTreeNode, keys: List[int], vals: List[int],
+        children: List[int]
+    ) -> Tuple[int, int, int]:
         # overflow: len(keys) == d
         mid = len(keys) // 2  # mediana superior para d par
         promo_k = keys[mid]
@@ -133,13 +148,20 @@ class BTree:
         # cria direito
         right_idx = self.disk.alloc_node(is_leaf=is_leaf)
         rnode = self.disk.read_node(right_idx)
-        self._write_from_lists(right_idx, rnode, right_keys, right_vals, right_children)
+        self._write_from_lists(
+            right_idx, rnode, right_keys, right_vals, right_children
+        )
 
         return (promo_k, promo_v, right_idx)
 
     def remove(self, key: int) -> None:
+        if self.d == 2:
+            root_node = self.disk.read_node(self.root)
+            if root_node.is_leaf and root_node.n_keys == 1 and root_node.keys[0] == key:
+                return
         self._delete(self.root, key)
-        # rebalanceio extra em 1 nível: tenta redistribuir 1 chave do irmão direito para o filho esquerdo
+        # rebalanceio extra em 1 nível:
+        # tenta redistribuir 1 chave do irmão direito para o filho esquerdo
         self._rebalance_level(self.root)
 
         root_node = self.disk.read_node(self.root)
@@ -157,7 +179,7 @@ class BTree:
             if node.is_leaf:
                 self._delete_from_leaf(idx, node, i)
             else:
-                self._delete_from_internal(idx, node, i)
+                self._delete_from_internal(idx, node, i, key)
             return
 
         if node.is_leaf:
@@ -167,7 +189,7 @@ class BTree:
         child_idx = node.children[child_pos]
         child = self.disk.read_node(child_idx)
 
-        if child.n_keys == self.min_keys:
+        if child.n_keys == self._min_keys_for(child_idx):
             child_idx = self._fix_child_underflow(idx, node, child_pos)
 
         self._delete(child_idx, key)
@@ -175,10 +197,13 @@ class BTree:
     def _delete_from_leaf(self, idx: int, node: BTreeNode, pos: int) -> None:
         keys = node.key_list()
         vals = node.value_list()
-        keys.pop(pos); vals.pop(pos)
+        keys.pop(pos)
+        vals.pop(pos)
         self._write_from_lists(idx, node, keys, vals, node.children)
 
-    def _delete_from_internal(self, idx: int, node: BTreeNode, pos: int) -> None:
+    def _delete_from_internal(
+        self, idx: int, node: BTreeNode, pos: int, key: int
+    ) -> None:
         left_idx = node.children[pos]
         right_idx = node.children[pos + 1]
         left = self.disk.read_node(left_idx)
@@ -186,14 +211,16 @@ class BTree:
 
         if left.n_keys > self.min_keys:
             pk, pv = self._max_in_subtree(left_idx)
-            node.keys[pos] = pk; node.values[pos] = pv
+            node.keys[pos] = pk
+            node.values[pos] = pv
             self.disk.write_node(idx, node)
             self._delete(left_idx, pk)
             return
 
         if right.n_keys > self.min_keys:
             sk, sv = self._min_in_subtree(right_idx)
-            node.keys[pos] = sk; node.values[pos] = sv
+            node.keys[pos] = sk
+            node.values[pos] = sv
             self.disk.write_node(idx, node)
             self._delete(right_idx, sk)
             return
@@ -217,7 +244,9 @@ class BTree:
                 return (n.keys[n.n_keys - 1], n.values[n.n_keys - 1])
             cur = n.children[n.n_keys]
 
-    def _fix_child_underflow(self, parent_idx: int, parent: BTreeNode, child_pos: int) -> int:
+    def _fix_child_underflow(
+        self, parent_idx: int, parent: BTreeNode, child_pos: int
+    ) -> int:
         child_idx = parent.children[child_pos]
         child = self.disk.read_node(child_idx)
 
@@ -225,22 +254,30 @@ class BTree:
             left_idx = parent.children[child_pos - 1]
             left = self.disk.read_node(left_idx)
             if left.n_keys > self.min_keys:
-                self._borrow_from_left(parent_idx, parent, child_pos, left_idx, left, child_idx, child)
+                self._borrow_from_left(
+                    parent_idx, parent, child_pos, left_idx, left, child_idx,
+                    child
+                )
                 return child_idx
 
         if child_pos < parent.n_keys:
             right_idx = parent.children[child_pos + 1]
             right = self.disk.read_node(right_idx)
             if right.n_keys > self.min_keys:
-                self._borrow_from_right(parent_idx, parent, child_pos, right_idx, right, child_idx, child)
+                self._borrow_from_right(
+                    parent_idx, parent, child_pos, right_idx, right, child_idx,
+                    child
+                )
                 return child_idx
 
         if child_pos < parent.n_keys:
             return self._merge(parent_idx, parent, child_pos)
         return self._merge(parent_idx, parent, child_pos - 1)
 
-    def _borrow_from_left(self, parent_idx: int, parent: BTreeNode, child_pos: int,
-                          left_idx: int, left: BTreeNode, child_idx: int, child: BTreeNode) -> None:
+    def _borrow_from_left(
+        self, parent_idx: int, parent: BTreeNode, child_pos: int,
+        left_idx: int, left: BTreeNode, child_idx: int, child: BTreeNode
+    ) -> None:
         ck, cv = child.key_list(), child.value_list()
         lk, lv = left.key_list(), left.value_list()
 
@@ -262,8 +299,10 @@ class BTree:
 
         self.disk.write_node(parent_idx, parent)
 
-    def _borrow_from_right(self, parent_idx: int, parent: BTreeNode, child_pos: int,
-                           right_idx: int, right: BTreeNode, child_idx: int, child: BTreeNode) -> None:
+    def _borrow_from_right(
+        self, parent_idx: int, parent: BTreeNode, child_pos: int,
+        right_idx: int, right: BTreeNode, child_idx: int, child: BTreeNode
+    ) -> None:
         ck, cv = child.key_list(), child.value_list()
         rk, rv = right.key_list(), right.value_list()
 
@@ -294,8 +333,10 @@ class BTree:
         lk, lv = left.key_list(), left.value_list()
         rk, rv = right.key_list(), right.value_list()
 
-        lk.append(parent.keys[sep_pos]); lv.append(parent.values[sep_pos])
-        lk.extend(rk); lv.extend(rv)
+        lk.append(parent.keys[sep_pos])
+        lv.append(parent.values[sep_pos])
+        lk.extend(rk)
+        lv.extend(rv)
 
         if not left.is_leaf:
             lch = left.child_list()
@@ -306,7 +347,9 @@ class BTree:
 
         pk, pv = parent.key_list(), parent.value_list()
         pch = parent.child_list()
-        pk.pop(sep_pos); pv.pop(sep_pos); pch.pop(sep_pos + 1)
+        pk.pop(sep_pos)
+        pv.pop(sep_pos)
+        pch.pop(sep_pos + 1)
 
         self._write_from_lists(left_idx, left, lk, lv, lch)
         self._write_from_lists(parent_idx, parent, pk, pv, pch)
@@ -324,7 +367,9 @@ class BTree:
             right = self.disk.read_node(right_idx)
             left = self.disk.read_node(left_idx)
             if right.n_keys > self.min_keys and left.n_keys < self.max_keys:
-                self._borrow_from_right(idx, node, child_pos, right_idx, right, left_idx, left)
+                self._borrow_from_right(
+                    idx, node, child_pos, right_idx, right, left_idx, left
+                )
                 node = self.disk.read_node(idx)
 
     def to_level_order_lines(self) -> List[str]:
