@@ -1,4 +1,3 @@
-import math
 from typing import List, Tuple, Optional
 from BTreeNode import BTreeNode
 from diskManager import DiskManager
@@ -10,10 +9,14 @@ class BTree:
         self.disk = disk
         self.max_keys = self.d - 1
         if self.d == 2:
-            # Regra especial da especificação: não permitir árvore vazia.
+            # não permitir árvore vazia.
             self.min_keys = 1
+        elif self.d % 2 == 1:
+            # se d ímpar, usar o menor mínimo que evita overflow em merges
+            # isso mantém n_keys <= max_keys após _merge
+            self.min_keys = (self.d // 2) - 1
         else:
-            self.min_keys = math.ceil(self.d / 2) - 1
+            self.min_keys = (self.d // 2) - 1
 
         self.root = self.disk.alloc_node(is_leaf=True)
 

@@ -1,9 +1,0 @@
-d=3
-nodes=1
-
-node 0
-is_leaf=1
-n_keys=2
-keys=20 75
-values=20 75
-children=-1 -1 -1
